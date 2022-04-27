@@ -30,6 +30,16 @@
     var SpeechRecognitionEvent = window.SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
     var SpeechGrammarList = window.SpeechGrammarList || webkitSpeechGrammarList;
 
+    if (!('webkitSpeechRecognition' in window)) {
+        upgrade();
+    }
+    if (!('webkitSpeechRecognitionEvent' in window)) {
+        upgrade();
+    }
+    if (!('webkitSpeechGrammarList' in window)) {
+        upgrade();
+    }
+
     var names = [ 'hug' , 'sahai' , 'hilfinger', 'john denero'];
     var grammar = '#JSGF V1.0; grammar names; public <name> = ' + names.join(' | ') + ' ;'
     var recognition = new SpeechRecognition();
