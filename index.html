@@ -1,1 +1,113 @@
-<h1> Hello World! </h1>
+<video controls autoplay id="video" style="width: 100%">
+    <source src="video/denero.mp4" type="video/mp4" id="vidSource">
+</video>
+<audio controls id="audio" style="visibility: hidden;">
+    <source src="audio/denero1.mp3" type="audio/mpeg" id="audioSource">
+</audio>
+
+<script>
+    var vid = document.getElementById("video");
+    var audio = document.getElementById("audio");
+    var vidSrc = document.getElementById("vidSource")
+    var audSrc = document.getElementById("audioSource")
+
+    function play(name) {
+        var rand = Math.floor(Math.random() * 3) + 1;
+        vidSrc.setAttribute('src', 'video/' + name + '.mp4')
+        audSrc.setAttribute('src', 'audio/' + name + rand + '.mp3')
+        vid.load();
+        audio.load();
+        vid.play();
+        audio.play();
+    }
+
+    function pause() {
+        vid.pause();
+        audio.pause();
+    }
+
+    var SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
+    var SpeechRecognitionEvent = window.SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
+    var SpeechGrammarList = window.SpeechGrammarList || webkitSpeechGrammarList;
+
+    var names = [ 'hug' , 'sahai' , 'hilfinger', 'john denero'];
+    var grammar = '#JSGF V1.0; grammar names; public <name> = ' + names.join(' | ') + ' ;'
+    var recognition = new SpeechRecognition();
+    var speechRecognitionList = new SpeechGrammarList();
+    speechRecognitionList.addFromString(grammar, 1);
+
+    recognition.grammars = speechRecognitionList;
+    recognition.continuous = true;
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.start();
+    recognition.onresult = function(event) {
+        var guess = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
+        guess = guess.replace(" ", '');
+        var candidates = ["hug", "hilfinger", "sahai", "hi", "thehigh", "johndenero"]
+        var bestGuess = -1
+        var bestAccuracy = -1
+        for (let i = 0; i < candidates.length; i++) {
+            var acc = similarity(candidates[i], guess);
+            console.log(candidates[i] + " " + acc + " from " + guess);
+            if (acc > bestAccuracy) {
+                bestGuess = i
+                bestAccuracy = acc
+            }
+        }
+
+        if (bestGuess == 0) {
+            play("hug");
+        } else if (bestGuess == 1) {
+            play("hilfinger");
+        } else if (bestGuess == 5) {
+            play("johndenero")
+        } else {
+            play("sahai")
+        }
+    }
+
+    function similarity(s1, s2) {
+        var longer = s1;
+        var shorter = s2;
+        if (s1.length < s2.length) {
+            longer = s2;
+            shorter = s1;
+        }
+        var longerLength = longer.length;
+        if (longerLength == 0) {
+            return 1.0;
+        }
+        return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+        }
+    
+    function editDistance(s1, s2) {
+        s1 = s1.toLowerCase();
+        s2 = s2.toLowerCase();
+
+        var costs = new Array();
+        for (var i = 0; i <= s1.length; i++) {
+            var lastValue = i;
+            for (var j = 0; j <= s2.length; j++) {
+            if (i == 0)
+                costs[j] = j;
+            else {
+                if (j > 0) {
+                var newValue = costs[j - 1];
+                if (s1.charAt(i - 1) != s2.charAt(j - 1))
+                    newValue = Math.min(Math.min(newValue, lastValue),
+                    costs[j]) + 1;
+                costs[j - 1] = lastValue;
+                lastValue = newValue;
+                }
+            }
+            }
+            if (i > 0)
+            costs[s2.length] = lastValue;
+        }
+        return costs[s2.length];
+    }
+    
+</script>
