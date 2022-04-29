@@ -12,9 +12,10 @@
     var audSrc = document.getElementById("audioSource")
 
     function play(name) {
+        pause();
         var rand = Math.floor(Math.random() * 3) + 1;
         vidSrc.setAttribute('src', 'video/' + name + '.mp4')
-        audSrc.setAttribute('src', 'audio/' + name + rand + '.mp3')
+        audSrc.setAttribute('src', 'audio/' + name + rand + '.m4a')
         vid.load();
         audio.load();
         vid.play();
@@ -73,7 +74,7 @@
         } else if (bestGuess == 1) {
             play("hilfinger");
         } else if (bestGuess == 5) {
-            play("johndenero")
+            play("denero")
         } else {
             play("sahai")
         }
