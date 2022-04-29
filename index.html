@@ -1,5 +1,5 @@
 <video controls autoplay id="video" style="width: 100%">
-    <source src="video/denero.webm" type="video/webm" id="vidSource">
+    <source src="video/denero.mp4" type="video/mp4" id="vidSource">
 </video>
 <audio controls id="audio" style="visibility: hidden;">
     <source src="audio/denero1.m4a" type="audio/m4a" id="audioSource">
@@ -14,7 +14,7 @@
     function play(name) {
         pause();
         var rand = Math.floor(Math.random() * 3) + 1;
-        vidSrc.setAttribute('src', 'video/' + name + '.webm')
+        vidSrc.setAttribute('src', 'video/' + name + '.mp4')
         audSrc.setAttribute('src', 'audio/' + name + rand + '.m4a')
         vid.load();
         audio.load();
