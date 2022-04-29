@@ -1,8 +1,8 @@
 <video controls autoplay id="video" style="width: 100%">
-    <source src="video/denero.mp4" type="video/mp4" id="vidSource">
+    <source src="video/denero.webm" type="video/webm" id="vidSource">
 </video>
 <audio controls id="audio" style="visibility: hidden;">
-    <source src="audio/denero1.mp3" type="audio/mpeg" id="audioSource">
+    <source src="audio/denero1.m4a" type="audio/m4a" id="audioSource">
 </audio>
 
 <script>
@@ -14,7 +14,7 @@
     function play(name) {
         pause();
         var rand = Math.floor(Math.random() * 3) + 1;
-        vidSrc.setAttribute('src', 'video/' + name + '.mp4')
+        vidSrc.setAttribute('src', 'video/' + name + '.webm')
         audSrc.setAttribute('src', 'audio/' + name + rand + '.m4a')
         vid.load();
         audio.load();
@@ -68,7 +68,9 @@
                 bestAccuracy = acc
             }
         }
-
+        if (bestAccuracy < 0.2) {
+            return;
+        }
         if (bestGuess == 0) {
             play("hug");
         } else if (bestGuess == 1) {
