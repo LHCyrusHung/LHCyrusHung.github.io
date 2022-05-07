@@ -1,8 +1,8 @@
-<video controls autoplay id="video" style="width: 100%">
-    <source src="video/denero.mp4" type="video/mp4" id="vidSource">
+<video controls autoplay id="video" mute style="width: 100%">
+    <source src="" type="video/mp4" id="vidSource">
 </video>
-<audio controls id="audio" style="visibility: hidden;">
-    <source src="audio/denero1.m4a" type="audio/m4a" id="audioSource">
+<audio controls autoplay id="audio" style="visibility: hidden;">
+    <source src="" id="audioSource">
 </audio>
 
 <script>
@@ -41,7 +41,7 @@
         upgrade();
     }
 
-    var names = [ 'hug' , 'sahai' , 'hilfinger', 'john denero'];
+    var names = ['hug', 'sahai', 'hilfinger', 'john denero'];
     var grammar = '#JSGF V1.0; grammar names; public <name> = ' + names.join(' | ') + ' ;'
     var recognition = new SpeechRecognition();
     var speechRecognitionList = new SpeechGrammarList();
@@ -54,7 +54,7 @@
     recognition.maxAlternatives = 1;
 
     recognition.start();
-    recognition.onresult = function(event) {
+    recognition.onresult = function (event) {
         var guess = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
         guess = guess.replace(" ", '');
         var candidates = ["hug", "hilfinger", "sahai", "hi", "thehigh", "johndenero"]
@@ -82,6 +82,9 @@
         }
     }
 
+    /** Levenshtein distance algorithm, found on
+     * https://stackoverflow.com/questions/68260766/getting-the-maximum-similarity-of-a-phrase-compared-to-phrases-of-another-string
+    **/
     function similarity(s1, s2) {
         var longer = s1;
         var shorter = s2;
@@ -94,8 +97,8 @@
             return 1.0;
         }
         return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
-        }
-    
+    }
+
     function editDistance(s1, s2) {
         s1 = s1.toLowerCase();
         s2 = s2.toLowerCase();
@@ -104,23 +107,23 @@
         for (var i = 0; i <= s1.length; i++) {
             var lastValue = i;
             for (var j = 0; j <= s2.length; j++) {
-            if (i == 0)
-                costs[j] = j;
-            else {
-                if (j > 0) {
-                var newValue = costs[j - 1];
-                if (s1.charAt(i - 1) != s2.charAt(j - 1))
-                    newValue = Math.min(Math.min(newValue, lastValue),
-                    costs[j]) + 1;
-                costs[j - 1] = lastValue;
-                lastValue = newValue;
+                if (i == 0)
+                    costs[j] = j;
+                else {
+                    if (j > 0) {
+                        var newValue = costs[j - 1];
+                        if (s1.charAt(i - 1) != s2.charAt(j - 1))
+                            newValue = Math.min(Math.min(newValue, lastValue),
+                                costs[j]) + 1;
+                        costs[j - 1] = lastValue;
+                        lastValue = newValue;
+                    }
                 }
             }
-            }
             if (i > 0)
-            costs[s2.length] = lastValue;
+                costs[s2.length] = lastValue;
         }
         return costs[s2.length];
     }
-    
+
 </script>
